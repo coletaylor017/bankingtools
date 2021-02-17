@@ -8,14 +8,35 @@
  */
 int main(int argc, char **argv) 
 { 
-    std::ifstream file(argv[1]);
-    std::string str; 
+    std::ifstream input_file(argv[1]);
     
     // open output file
-    std::ofstream output_file("formatted_statement.txt");
+    std::ofstream output_file("formatted_statement.txt", std::ofstream::out | std::ofstream::trunc); // truncate option deletes contents before writing
 
-    while (std::getline(file, str))
+    std::string date;
+
+    // each entry consists of the following, one on each line:
+    // date, location/company, category, amount & running balance
+    while (std::getline(input_file, date))
     {
-      output_file << str << "\t";
+
+      std::string location;
+      std::getline(input_file, location);
+
+      std::string category;
+      std::getline(input_file, category);
+
+      std::string amount;
+      std::getline(input_file, amount);
+
+      // now, stream all the fields, ommitting the newline at the end of each one
+      output_file << date.substr(0, date.size()-1) << "\t";
+      output_file << amount.substr(0, amount.size()-1) << "\t";
+      output_file << category.substr(0, category.size()-1) << "\t";
+      output_file << location; // include newline but no tab on this last one
+
     }
+
+    output_file.close();
+    input_file.close();
 }
